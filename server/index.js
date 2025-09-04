@@ -34,7 +34,24 @@ app.get("/api/latest", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-// app.get("/api/convert", (req, res) => {});
+app.get("/api/convert", async (req, res) => {
+  const { base_currency, currencies } = req.query;
+  try {
+    const response = await axios.get(
+      `${convertURL}?${base_currency}&${currencies}`,
+      {
+        headers: {
+          apikey: process.env.API_KEY,
+        },
+      }
+    );
+    if (!response)
+      return res.status(404).json({ message: "データが見つかりません" });
+    res.status(200).json(response.data.data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
