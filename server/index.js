@@ -8,12 +8,21 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const convertURL = process.env.API_CONVERT;
 const latestURL = process.env.API_LATEST;
+const currenciesURL = process.env.API_Currencies;
 
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+// 通貨を取得するエンドポイント
+app.get("/api/currencies", async (req, res) => {
+  const response = await axios.get(currenciesURL, {
+    headers: {
+      apikey: process.env.API_KEY,
+    },
+  });
+  if (!response)
+    return res.status(404).json({ message: "データが見つかりません" });
+  res.status(200).json(response.data.data);
 });
 
 app.get("/api/latest", async (req, res) => {
