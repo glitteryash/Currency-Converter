@@ -1,5 +1,7 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect } from "react";
+import axios from "axios";
 import {
   Card,
   CardAction,
@@ -9,10 +11,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Culculate from "./culculate";
-import History from "./history";
+import Culculate from "./Culculate";
+import History from "./History";
 
 function Tab() {
+  useEffect(() => {
+    const fetchCurrencies = async () => {
+      try {
+        const response = await axios.get("/api/currencies");
+        console.log("匯率：", response.data);
+      } catch (err) {
+        console.error("Error fetching currencies:", err);
+        if (err.response?.status === 404) {
+          console.error("データが見つかりません。");
+        }
+      }
+    };
+    fetchCurrencies();
+  }, []);
+
   return (
     <div className="flex justify-center items-center h-screen">
       <Card className="w-[400px]">
