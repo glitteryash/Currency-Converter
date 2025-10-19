@@ -39,7 +39,7 @@ function Tab() {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <Card className="w-[400px]">
+      <Card className="w-[600px]">
         {/* <CardHeader>
           <CardTitle>Card Title</CardTitle>
           <CardDescription>Card Description</CardDescription>
@@ -53,8 +53,12 @@ function Tab() {
         </CardFooter> */}
         <Tabs className="w-full flex px-6" defaultValue="culculate">
           <TabsList className="mb-2 w-full">
-            <TabsTrigger value="culculate">通貨換算</TabsTrigger>
-            <TabsTrigger value="history">歴史チャート</TabsTrigger>
+            <TabsTrigger className="cursor-pointer" value="culculate">
+              通貨換算
+            </TabsTrigger>
+            <TabsTrigger className="cursor-pointer" value="history">
+              歴史チャート
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="culculate">
             <Culculate />
