@@ -38,8 +38,8 @@ function Tab() {
   // }, []);
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Card className="w-[600px]">
+    <div className="flex justify-center items-center h-screen mx-4">
+      <Card className="w-full max-w-lg">
         {/* <CardHeader>
           <CardTitle>Card Title</CardTitle>
           <CardDescription>Card Description</CardDescription>

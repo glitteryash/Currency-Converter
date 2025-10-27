@@ -84,10 +84,10 @@ function Culculate() {
           <div className="w-8 h-8 border-4 border-gray-500 border-t-blue-200 rounded-full animate-spin"></div>
         </div>
       ) : (
-        <div className="flex flex-col justify-center items-center mt-4 gap-y-4">
-          <div className="flex gap-4">
+        <div className="w-full flex flex-col justify-center items-center mt-4 gap-y-4">
+          <div className="flex gap-4 w-full justify-center">
             <Select value={baseCurrency} onValueChange={setBaseCurrency}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-full max-w-[100px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -103,13 +103,13 @@ function Culculate() {
             <Input
               type="number"
               defaultValue={value}
-              className="w-[200px]"
+              className="w-full max-w-[200px]"
               onChange={handleAmountChange}
             />
           </div>
           <Button
             variant="outline"
-            className="cursor-pointer"
+            className="group cursor-pointer hover:bg-blue-200"
             onClick={handleReverseCurrencies}
           >
             <svg
@@ -118,7 +118,7 @@ function Culculate() {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-4"
+              className="size-4 group-hover:stroke-white transition-colors duration-200 ease-in-out"
             >
               <path
                 strokeLinecap="round"
@@ -127,9 +127,9 @@ function Culculate() {
               />
             </svg>
           </Button>
-          <div className="flex gap-4">
+          <div className="flex gap-4 w-full justify-center">
             <Select value={targetCurrency} onValueChange={setTargetCurrency}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-full max-w-[100px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -142,7 +142,11 @@ function Culculate() {
                 })}
               </SelectContent>
             </Select>
-            <Input type="number" Value={targetAmount} className="w-[200px]" />
+            <Input
+              type="number"
+              Value={targetAmount}
+              className="w-full max-w-[200px]"
+            />
           </div>
         </div>
       )}
