@@ -6,7 +6,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const convertURL = process.env.API_CONVERT;
+const historicalURL = process.env.API_RANGE;
 const latestURL = process.env.API_LATEST;
 const currenciesURL = process.env.API_CURRENCIES;
 
@@ -33,25 +33,7 @@ app.get("/api/currencies", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
-// app.get("/api/latest", async (req, res) => {
-//   const { base_currency, currencies } = req.query;
-//   try {
-//     const response = await axios.get(
-//       `${latestURL}?${base_currency}&${currencies}`,
-//       {
-//         headers: {
-//           apikey: process.env.API_KEY,
-//         },
-//       }
-//     );
-//     if (!response)
-//       return res.status(404).json({ message: "データが見つかりません" });
-//     res.status(200).json(response.data.data);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// });
+// 最新の為替レートを取得するエンドポイント
 app.get("/api/latest", async (req, res) => {
   const { baseCurrency, targetCurrency } = req.query;
   try {
@@ -66,6 +48,34 @@ app.get("/api/latest", async (req, res) => {
     });
     console.log(response.data);
 
+    if (!response.data)
+      return res.status(404).json({ message: "データが見つかりません" });
+    res.status(200).json(response.data.data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// 指定された期間の為替レートを取得するエンドポイント
+app.get("/api/range", async (req, res) => {
+  const { baseCurrency, targetCurrency, startDate, endDate } = req.query;
+  console.log("/api/range called with params:", {
+    baseCurrency,
+    targetCurrency,
+    startDate,
+    endDate,
+  });
+  try {
+    const response = await axios.get(historicalURL, {
+      headers: { apikey: process.env.API_KEY },
+      params: {
+        base_currency: baseCurrency,
+        currencies: targetCurrency,
+        datetime_start: startDate,
+        datetime_end: endDate,
+      },
+    });
+    console.log(response.data);
     if (!response.data)
       return res.status(404).json({ message: "データが見つかりません" });
     res.status(200).json(response.data.data);

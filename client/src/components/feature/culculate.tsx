@@ -1,6 +1,4 @@
-import React from "react";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { fetchCurrencies, convertCurrency } from "../../api/api";
 import {
   Select,
@@ -12,21 +10,32 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-function Culculate() {
+type Props = {
+  baseCurrency: string;
+  setBaseCurrency: (v: string) => void;
+  targetCurrency: string;
+  setTargetCurrency: (v: string) => void;
+};
+
+function Culculate({
+  baseCurrency,
+  setBaseCurrency,
+  targetCurrency,
+  setTargetCurrency,
+}: Props) {
   const [currencies, setCurrencies] = useState<string[]>(["JPY"]);
-  const [targetCurrency, setTargetCurrency] = useState("USD");
-  const [baseCurrency, setBaseCurrency] = useState("JPY");
   const [value, setValue] = useState(1);
-  const [targetAmount, setTargetAmount] = useState(null);
-  const [rate, setRate] = useState(null);
-  const [loading, setLaoding] = useState(true);
+  const [targetAmount, setTargetAmount] = useState<string>("");
+  const [rate, setRate] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getCurrencies = async () => {
       const localCurrencies = localStorage.getItem("currencies");
+      console.log("localCurrencies:", localCurrencies);
       if (localCurrencies) {
         setCurrencies(JSON.parse(localCurrencies));
-        setLaoding(false);
+        setLoading(false);
         return;
       }
       try {
@@ -37,7 +46,7 @@ function Culculate() {
       } catch (err) {
         console.error("Error fetching currencies:", err);
       } finally {
-        setLaoding(false);
+        setLoading(false);
       }
     };
     getCurrencies();
@@ -46,14 +55,14 @@ function Culculate() {
   useEffect(() => {
     const getConvertedAmount = async () => {
       try {
-        setLaoding(true);
+        setLoading(true);
         const data = await convertCurrency(baseCurrency, targetCurrency);
         console.log(data[targetCurrency].value);
         setRate(data[targetCurrency].value);
       } catch (err) {
         console.error("Error converting currency:", err);
       } finally {
-        setLaoding(false);
+        setLoading(false);
       }
     };
     getConvertedAmount();
@@ -67,7 +76,8 @@ function Culculate() {
   }, [rate, value]);
 
   const handleAmountChange = (e) => {
-    setValue(e.target.value);
+    const v = e.target.value === "" ? "" : Number(e.target.value);
+    setValue(v === "" ? 0 : v);
   };
 
   const handleReverseCurrencies = () => {
@@ -102,7 +112,7 @@ function Culculate() {
             </Select>
             <Input
               type="number"
-              defaultValue={value}
+              value={value}
               className="w-full max-w-[200px]"
               onChange={handleAmountChange}
             />
@@ -144,8 +154,9 @@ function Culculate() {
             </Select>
             <Input
               type="number"
-              Value={targetAmount}
+              value={targetAmount}
               className="w-full max-w-[200px]"
+              readOnly
             />
           </div>
         </div>

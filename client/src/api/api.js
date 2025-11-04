@@ -25,3 +25,25 @@ export const convertCurrency = async (baseCurrency, targetCurrency) => {
     throw new Error("通貨変換に失敗しました:" + error.message);
   }
 };
+
+export const fetchHistoricalRates = async (
+  baseCurrency,
+  targetCurrency,
+  startDate,
+  endDate
+) => {
+  try {
+    console.log("Fetching historical rates with params:", {
+      baseCurrency,
+      targetCurrency,
+      startDate,
+      endDate,
+    });
+    const response = await axios.get(`${API_BASE_URL}/api/range`, {
+      params: { baseCurrency, targetCurrency, startDate, endDate },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("履歴データの取得に失敗しました:" + error.message);
+  }
+};
