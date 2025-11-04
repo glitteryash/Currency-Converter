@@ -57,13 +57,12 @@ app.get("/api/latest", async (req, res) => {
 });
 
 // 指定された期間の為替レートを取得するエンドポイント
-app.get("/api/range", async (req, res) => {
-  const { baseCurrency, targetCurrency, startDate, endDate } = req.query;
+app.get("/api/history", async (req, res) => {
+  const { baseCurrency, targetCurrency, date } = req.query;
   console.log("/api/range called with params:", {
     baseCurrency,
     targetCurrency,
-    startDate,
-    endDate,
+    date,
   });
   try {
     const response = await axios.get(historicalURL, {
@@ -71,8 +70,7 @@ app.get("/api/range", async (req, res) => {
       params: {
         base_currency: baseCurrency,
         currencies: targetCurrency,
-        datetime_start: startDate,
-        datetime_end: endDate,
+        date: date,
       },
     });
     console.log(response.data);

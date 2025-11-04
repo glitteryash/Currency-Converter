@@ -6,54 +6,34 @@ type Props = {
 };
 
 function history({ baseCurrency, targetCurrency }: Props) {
-  const [days, setDays] = useState(7);
-
   useEffect(() => {
     const fetchWeeklyData = async () => {
       try {
-        const end = new Date();
-        const start = new Date();
-        start.setDate(end.getDate() - days);
-        const endDate = end.toISOString();
-        const startDate = start.toISOString();
-        console.log(startDate);
-        console.log(endDate);
-        console.log(baseCurrency, targetCurrency);
-        const response = await fetchHistoricalRates(
-          baseCurrency,
-          targetCurrency,
-          startDate,
-          endDate
+        const results: string[] = [];
+        const today = new Date();
+        today.setDate(today.getDate() - 1); //前日までのデータを取得のため
+
+        for (let i = 0; i < 7; i++) {
+          const date = new Date(today);
+          date.setDate(today.getDate() - i);
+          const formattedDate = date.toISOString().split("T")[0];
+          results.push(formattedDate);
+        }
+        results.reverse();
+        const historicalRates = await Promise.all(
+          results.map((date) =>
+            fetchHistoricalRates(baseCurrency, targetCurrency, date)
+          )
         );
-        console.log("Historical Data:", response);
+        console.log("Historical Rates:", historicalRates);
       } catch (err) {
         console.error("Error fetching historical rates:", err);
       }
     };
     fetchWeeklyData();
-  }, [baseCurrency, targetCurrency, days]);
-  const presets = [
-    { label: "7日間", days: 7 },
-    { label: "1ヶ月", days: 30 },
-    { label: "3ヶ月", days: 90 },
-  ];
-  return (
-    <div>
-      <div>
-        {presets.map((preset, index) => {
-          return (
-            <button
-              className="cursor-pointer"
-              key={index}
-              onClick={() => setDays(preset.days)}
-            >
-              {preset.label}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
+  }, [baseCurrency, targetCurrency]);
+
+  return <div></div>;
 }
 
 export default history;
